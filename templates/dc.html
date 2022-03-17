@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html dark="true" lang="de-de">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Erik Lehmann</title>
+    <link rel="stylesheet" href="Design.css">
+    <link rel="icon" type="image/png" href="Icon.png">
+    <link rel="stylesheet" href="f.css">
+    <style>
+        html {
+            overflow: -moz-scrollbars-none;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            scroll-behavior: auto;
+            max-width: 100%;
+        }
+        
+        body {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            max-width: 100%;
+            padding: 5% 15%;
+            background: #171414;
+            font-family: "Courier New", Courier;
+            color: rgb(255, 255, 230);
+        }
+        
+         ::-webkit-scrollbar {
+            display: none;
+        }
+        
+        a:link {
+            text-decoration: underline;
+            color: royalblue;
+            background-color: transparent;
+        }
+        
+        #progressBarContainer {
+            position: fixed;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        #progressBar {
+            position: fixed;
+            transform-origin: top center;
+            transform: scale(1, 0);
+            background: rgb(30, 30, 100);
+        }
+        
+        #progressBarContainer,
+        #progressBar {
+            user-select: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 15px;
+        }
+        
+        #myCanvas {
+            position: fixed;
+            z-index: -1;
+            top: -10px;
+            left: -10px;
+        }
+        
+        #Name {
+            position: relative;
+            z-index: 2;
+            left: -100px;
+            margin: 20px;
+            font-family: "Garamond";
+            font-size: 80px;
+            font-weight: bolder;
+            color: rgb(255, 255, 230);
+        }
+        
+        #Subtext {
+            position: relative;
+            z-index: 2;
+            left: -80px;
+            height: 500px;
+            margin: 20px;
+            font-family: "Garamond";
+            font-size: 30px;
+            color: rgb(255, 255, 230);
+        }
+        
+        #ImageHolder {
+            position: relative;
+            padding: 10px!important;
+        }
+        
+        #Mugshot {
+            overflow-y: hidden;
+            position: absolute;
+            top: -100px;
+            right: -400px;
+            height: 900px;
+            z-index: 1;
+        }
+        
+        #CategoriesL,
+        #CategoriesA,
+        #CategoriesM,
+        #ImprintTag {
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        #ImprintTagEnd {
+            overflow: hidden;
+            font-size: 0px;
+            text-align: center;
+        }
+        
+        #CategoriesL:before,
+        #CategoriesL:after,
+        #CategoriesA:before,
+        #CategoriesA:after,
+        #CategoriesM:before,
+        #CategoriesM:after,
+        #ImprintTag:before,
+        #ImprintTag:after,
+        #ImprintTagEnd:before,
+        #ImprintTagEnd:after {
+            display: inline-block;
+            position: relative;
+            height: 1px;
+            width: 50%;
+            background-color: #FFFFFF;
+            vertical-align: middle;
+            content: "";
+        }
+        
+        #CategoriesL:before,
+        #CategoriesA:before,
+        #CategoriesM:before,
+        #ImprintTag:before {
+            right: 0.5em;
+            margin-left: -50%;
+        }
+        
+        #CategoriesL:after,
+        #CategoriesA:after,
+        #CategoriesM:after,
+        #ImprintTag:after {
+            left: 0.5em;
+            margin-right: -50%;
+        }
+        
+        #CategoriesL:hover,
+        #CategoriesA:hover,
+        #CategoriesM:hover {
+            font-style: italic;
+            text-shadow: 0 0 0.3em white;
+        }
+        
+        #ImprintTagEnd:before {
+            right: 0em;
+            margin-left: -50%;
+        }
+        
+        #ImprintTagEnd:after {
+            left: 0em;
+            margin-right: -50%;
+        }
+        
+        #CatGrid {
+            display: grid;
+            grid-template-columns: 33.3% 33.4% 33.3%;
+            height: 70px;
+            padding: 10px;
+        }
+        
+        #TopicBackdrop {
+            overflow-y: clip;
+            position: relative;
+            height: 0px;
+        }
+        
+        #LGrid {
+            display: grid;
+            visibility: hidden;
+            transform-origin: top;
+            position: relative;
+            top: 2px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            grid-template-columns: auto;
+            grid-template-rows: 0%;
+            grid-row-gap: 20px;
+        }
+        
+        #AGrid,
+        #MGrid {
+            display: grid;
+            visibility: hidden;
+            transform-origin: top;
+            position: absolute;
+            top: 2px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            grid-template-columns: auto;
+            grid-template-rows: 0%;
+            grid-row-gap: 20px;
+            justify-items: center;
+        }
+        
+        #Spacer {
+            position: relative;
+            left: 50%;
+            height: 80px;
+            border-left: 1px solid #FFFFE6;
+        }
+        
+        #GitLogo {
+            width: 350px;
+        }
+        
+        #DescriptionCodePreview {
+            font-size: 25px;
+            color: rgb(255, 255, 230);
+        }
+        
+        #ImpGrid {
+            display: grid;
+            margin: 0px 100px 25px 150px;
+            grid-template-areas: 'left middle right';
+        }
+        
+        #EndQuote {
+            position: relative;
+            right: -80px;
+            transform: translateY(20px);
+            z-index: 1;
+            font-size: 16px;
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body id="mainBod">
+    <!--Scrollar-->
+    <div id="progressBarContainer">
+        <div id="progressBar"></div>
+    </div>
+
+    <!--Image-->
+    <div id="ImageHolder">
+        <img id="Mugshot" src="Profile Transparent.png" alt="Meine Fratze konnte nicht geladen werden" />
+    </div>
+
+    <!--Spacer-->
+    <div style="height:300px"></div>
+
+    <!--Head of Body-->
+    <p id="Name">Erik Valentin Lehmann</p>
+    <p id="Subtext">Aus Liebe zum Problemlösen</p>
+
+    <!--Topics-->
+    <div class="grid-container" id="CatGrid">
+        <h2 id="CategoriesL"><span>Lebenslauf</span></h2>
+        <h2 id="CategoriesA"><span>Arbeit</span></h2>
+        <h2 id="CategoriesM"><span>Motivation</span></h2>
+    </div>
+    <div id="TopicBackdrop">
+        <div class="grid-container" id="LGrid">
+            <h3 id="TopicL1"><span>2005 - 2009<br />Grundschule Langwies in Mettlach</span></h3>
+            <h3 id="Spacer"></h3>
+            <h3 id="TopicL2"><span>2009 – Juni 2018<br />Gymnasium am Stefansberg in Merzig<br />Erwerb der allgemeinen Hochschulreife (Abitur)</span></h3>
+            <h3 id="Spacer"></h3>
+            <h3 id="TopicL3"><span>August 2018 – Februar 2019<br />Propstey St.Josef in Taben-Rodt<br />Praktikum im sozialen Bereich</span></h3>
+            <h3 id="Spacer"></h3>
+            <h3 id="TopicL4"><span>März 2019 - Juli 2019<br /></span>Mediawerkstatt Saar<br />Praktikum im Bereich EDV und BWL</h3>
+            <h3 id="Spacer"></h3>
+            <h3 id="TopicL5"><span>August 2019 - Sommer 2022 (vorauss.)<br />Ausbildung bei Fixemer Logistics GmbH<br />TGBBZ Dillingen<br />Abschluss als Fachinformatiker für Anwendungsentwicklung</span></h3>
+        </div>
+        <div class="grid-container" id="AGrid">
+            <h2 id="TopicLang">Dies sind die Sprachen, die ich spreche, sortiert von verhandlungssicher nach Grundkenntnisse</h2>
+            <div id="LangLogos">
+                <a href="https://docs.microsoft.com/de-de/dotnet/csharp/" target="_blank"><img src="Lang1.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://docs.oracle.com/javase/7/docs/technotes/guides/language/" target="_blank"><img src="Lang2.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://dotnet.microsoft.com/en-us/" target="_blank"><img src="Lang3.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://docs.microsoft.com/de-de/cpp/cpp/?view=msvc-170" target="_blank"><img src="Lang4.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://docs.microsoft.com/de-de/sql/?view=sql-server-ver15" target="_blank"><img src="Lang5.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://developer.mozilla.org/en-US/docs/Web" target="_blank"><img src="Lang6.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://docs.microsoft.com/de-de/office/vba/api/overview/" target="_blank"><img src="Lang7.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://www.php.net" target="_blank"><img src="Lang8.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+            </div>
+            <h2 id="TopicLangReal">Außerdem ist Deutsch meine Muttersprache. Ich bin verhandlungssicher in Englisch und habe Grundkenntnisse in Französisch</h2>
+            <h3 id="Empty"></h3>
+            <h2 id="TopicProg">Ich habe bereits mit vielen verschiedenen Programmen gearbeitet. Sowohl im Bereich der Programmierung, als auch 3D-Modellierung, 3D-Animation und Bild-/Videobearbeitung</h2>
+            <div id="ProgLogos">
+                <a href="https://docs.microsoft.com/en-us/visualstudio/windows/?view=vs-2022" target="_blank"><img src="Prog1.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://www.jetbrains.com/de-de/idea/" target="_blank"><img src="Prog2.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://brand.unity.com" target="_blank"><img src="Prog3.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://www.blender.org" target="_blank"><img src="Prog4.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://www.gimp.org" target="_blank"><img src="Prog5.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://ultimaker.com/de/software/ultimaker-cura" target="_blank"><img src="Prog6.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+                <a href="https://fxhome.com/product/hitfilm-express" target="_blank"><img src="Prog7.png" alt="Logo konnte nicht geladen werden" style="height:150px" /></a>
+            </div>
+            <h3 id="Empty"></h3>
+            <h2 id="TopicA1">Die meisten Projekte, an denen ich bis jetzt gearbeitet habe, sind auf meiner GitHub-Seite zu finden</h2>
+            <a href="https://github.com/SlamWeasel" target="_blank">
+                <img id="GitLogo" src="github-logo-white.png" />
+            </a>
+            <h2>Hier eine kleine Auswahl</h2>
+            <h3 id="Empty"></h3>
+            <h3 id="TopicA2">PDF-Edit</h3>
+            <h4 id="TopicA3">Programmprototyp, den ich als Abschlussprojekt nutzen möchte</h4>
+            <img id="PDFEditPreview1" src="PDFEditPreview1.png" style="height:500px" />
+            <h4 id="TopicA4">Mit interaktiven Icons und einem Light/Dark Colorscheme, das sich dem Windows-Thema anpasst</h4>
+            <img id="PDFEditPreview2" src="PDFEditPreview2.png" style="height:500px" />
+            <img id="PDFEditPreview3" src="PDFEditPreview3.png" style="height:500px" />
+            <h3 id="Empty"></h3>
+            <h3 id="TopicA5">SQL2XLS</h3>
+            <h4 id="TopicA3">Kleines Debug/Test-Tool, mit dem man ohne SQL-Management Studio oder andere Programme SQL-Abfragen machen kann (Zugangsdaten werden in einer separaten Datei angegeben)</h4>
+            <img id="SQL2XLS" src="SQL2XLS.png" />
+            <h3 id="Empty"></h3>
+            <h3 id="TopicA5">Schnittstellenabfrage</h3>
+            <h4 id="TopicA3">Internes Tool um Fahrpläne von der API-Schnittstelle der Firma Finnlines abzurufen.<br />HTML-Anfrage wird gesendet und die JSON-Antwort wird ausgewertet und kann sortiert und in das eigene Postfach gesendet werden.</h4>
+            <img id="FinnlinesAPICheck" src="FinnlinesAPICheck.png" />
+
+        </div>
+        <div class="grid-container" id="MGrid">
+            <h2 id="TopicM">
+                Begonnen hat mein Interesse an der Programmierung mit etwa 13 Jahren. Damals war ich sehr aktiv in der Community des Spiels Minecraft, welches sich mit Java modifizieren lässt. Zwar habe ich damals das Konzept der objektorientierten Programmierung noch
+                nicht durchblickt, doch ich konnte bereits Features einbauen, von denen ich auch heute noch denke, dass sie sehr nützlich sind.<br /> Beispielsweise ein Head-Up-Display eines Kompass&#39;, der einen Wegpunkt in der Welt
+                anzeigen konnte, mithilfe von Verrechnung der Rotation zum Punkt hin, basierend auf den Koordinaten und der Formeln des Pythagoras.<br /><br /> Dabei ging es mir schon immer darum, so wie heute auch, Software für Benutzer zu entwickeln.
+                Damit ist gemeint: Software, die möglichst benutzerfreundlich ist, selbst für Nutzer, die wenig bis gar kein Verständnis der eigentlichen Funktion dieser Software haben. Es sollte bei alter Software allerdings auch darauf geachtet werden,
+                mit neuen Designs Stammnutzern die gleichen gewohnten Arbeitsschritte weiter zu ermöglichen!<br /><br /> Stellt sich ein Problem dar mit bestehender Software, dann sehe ich dies als Herausforderung Wege zu finden, das Problem auszumerzen
+                und dafür zu sorgen, dass es nicht wieder auftritt. Diesen Herausforderungen stelle ich mich stets mit Enthusiasmus, da mit jeder Herausforderung oft auch die eigene Fortbildung einhergeht.
+            </h2>
+        </div>
+    </div>
+    <div style="height:300px"></div>
+
+
+    <!--CodePen Preview Window
+    <p id="DescriptionCodePreview">Diese Seite ist komplett einsehbar auf <a href="https://codepen.io/slamweasel/pen/rNGrKmY">CodePen</a>. Hierunter ist eine Preview des Codes</p>
+    <p id="CodePreview" class="codepen" data-height="500" data-theme-id="dark" data-default-tab="js,result" data-slug-hash="rNGrKmY" data-editable="true" data-user="slamweasel" style="position: relative; height: 500px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;">
+        <span>
+            See the Pen <a href="https://codepen.io/slamweasel/pen/rNGrKmY"> Personal HomePage </a> by SlamWeasel (<a href="https://codepen.io/slamweasel">@slamweasel</a>)on <a href="https://codepen.io">CodePen</a>.
+        </span>
+    </p>
+    <script async src="https://cpwebassets.codepen.io/assets/embed/ei.js"></script>-->
+
+    <!--Imprint-->
+    <h2 id="ImprintTag"><span>Impressum</span></h2>
+    <div class="grid-container" id="ImpGrid">
+        <div style="grid-area: left">
+            <h2><u>
+                Adresse:
+            </u></h2>
+            <h3>
+                Erik Lehmann<br /> Im Eitzwäldchen 9<br /> 66693 Mettlach<br />
+            </h3>
+        </div>
+        <div style="grid-area: middle">
+            <h2><u>
+                Telefon:
+            </u></h2>
+            <h3>
+                Privat: +49 6864 / 510<br /> Gesch.: +49 6867 / 50 7715<br />
+            </h3>
+        </div>
+        <div style="grid-area: right">
+            <h2><u>
+                Mail:
+            </u></h2>
+            <h3>
+                Privat: <a href="mailto:info@erik-lehmann.website">info@erik-lehmann.website</a><br /> Gesch.: <a href="mailto:EVLehmann@fixemer.com">EVLehmann@fixemer.com</a><br />
+            </h3>
+        </div>
+    </div>
+    <h2 id="ImprintTagEnd"><span><s> </s></span></h2>
+
+    <!--Ending-->
+    <div style="height:200px"></div>
+    <div id="EndQuote">
+        <br /> Wenn die anderen glauben man ist am Ende, so muss man erst richtig anfangen!<br /> ~Konrad Adenauer
+    </div>
+
+    <!--Background Canvas-->
+    <canvas id="myCanvas" style="position:fixed; top:-10px; left:-10px; z-index:-1;"></canvas>
+    <script src="MainLoop.js"></script>
+    <script>
+        /*
+         *	All code written by Erik Lehmann
+         *	Last Update: 24.12.2022
+         *
+         *	In Case of Error, please contact LehmannEV@outlook.com
+         */
+
+        let rotation = 0;
+        let newFrame = false;
+        let topSpeed = 0.1;
+        let pageYDistance = 0;
+        let ClickCounter = 0;
+        let offsetWidth = 10;
+        let offsetHeight = 10;
+        let barClicked = false;
+        const totalPageHeight = document.body.scrollHeight - window.innerHeight;
+        let focused = false;
+        let val = 0.0;
+
+        //Animated Background - Canvas
+        let canvas = document.getElementById("myCanvas");
+        canvas.width = window.innerWidth + offsetWidth;
+        canvas.height = window.innerHeight + offsetHeight;
+        let ctx = canvas.getContext("2d");
+        let ctxEmpty = canvas.getContext("2d");
+        let canvasData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        //Animated Background - Point-Initialisation
+        var points = [{
+            x: -10,
+            y: -10,
+            targetx: -10,
+            targety: -10,
+            cooldown: 0,
+            velocityX: 0,
+            velocityY: 0,
+            name: "00",
+            distance: 0
+        }];
+        for (let count = 1; count <= 120; count++) {
+            const wx = Math.round(Math.random() * canvas.width);
+            const wy = Math.round(Math.random() * 500);
+            points.push({
+                x: wx,
+                y: wy,
+                targetx: wx,
+                targety: wy,
+                cooldown: 0,
+                velocityX: wx,
+                velocityY: wy,
+                name: count.toString(),
+                distance: 0
+            });
+        }
+        //Cursor Position-Object
+        let mousePos = {
+            x: -10,
+            y: -10
+        };
+        //Scrollbar (Progressbar-Style)
+        const progressBarContainer = document.querySelector("#progressBarContainer");
+        progressBarContainer.addEventListener("click", onScrollBarClick);
+        progressBarContainer.addEventListener("mousedown", onScrollBarMouseDown);
+        window.addEventListener("mouseup", onScrollBarMouseUp);
+        progressBarContainer.addEventListener("mousemove", onMouseMove)
+        const progressBar = document.querySelector("#progressBar");
+        //Global EventHandlers
+        document.onmousemove = onMouseMove;
+        window.addEventListener("scroll", onScroll);
+        //CategoryGrid-Objects and EventHandlers
+        const EE = document.querySelector("#Mugshot");
+        EE.addEventListener("click", onEasterEgg);
+        const CatGrid = document.querySelector("#CatGrid");
+        const CatL = document.querySelector("#CategoriesL");
+        CatL.addEventListener("click", onCatLClick);
+        const CatA = document.querySelector("#CategoriesA");
+        CatA.addEventListener("click", onCatAClick);
+        const CatM = document.querySelector("#CategoriesM");
+        CatM.addEventListener("click", onCatMClick);
+        const TBG = document.querySelector("#TopicBackdrop");
+        const gridL = document.querySelector("#LGrid");
+        const gridA = document.querySelector("#AGrid");
+        const gridM = document.querySelector("#MGrid");
+
+        /*
+        var h = document.createElement("H1");
+        var t = document.createTextNode("Hello World");
+        h.appendChild(t);
+        document.body.appendChild(h);
+        */
+
+
+        /*
+         *
+         *	Start of Loop
+         *
+         */
+
+        window.requestAnimationFrame(loop);
+
+        function loop() {
+            draw();
+            window.requestAnimationFrame(loop);
+        }
+
+        function draw() {
+            rescale(canvas, window.innerWidth, window.innerHeight, offsetWidth, offsetHeight);
+
+            //Draw Background
+            let grd = ctx.createRadialGradient(canvas.width, canvas.height, 5, canvas.width, canvas.height, canvas.width * 1.5);
+            grd.addColorStop(0, rgb(0, 0, 30));
+            grd.addColorStop(1, rgb(0, 0, 66));
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+
+            //Draw MouseCursor
+            let pos = mousePos;
+            let mouseGrd = ctx.createRadialGradient(pos.x + 1, pos.y + 1, 3, pos.x, pos.y, 30);
+            ctx.beginPath();
+            mouseGrd.addColorStop(0, rgb(7, 7, 70));
+            mouseGrd.addColorStop(1, rgba(7, 7, 70, 0));
+            ctx.fillStyle = mouseGrd;
+            ctx.arc(pos.x, pos.y, 30, 0, 360, false);
+            ctx.fill();
+
+
+            //Draw lines between points
+            var lines;
+            var distances;
+            var cursor;
+            var closest1 = {
+                distance: 1000
+            };
+            var closest2 = {
+                distance: 1000
+            };
+            for (let item of points) {
+                //Calculate Lines
+                for (let innerItem of points) {
+                    let dis = getDistance(innerItem.x, innerItem.y, item.x, item.y);
+                    if (dis < 1000 && dis < (closest1.distance * 0.666666) && dis > 30) {
+                        innerItem.distance = getDistance(innerItem.x, innerItem.y, item.x, item.y);
+                        closest1 = innerItem;
+                    } else if (dis < 1000 && dis < (closest2.distance * 0.666666) && dis > 30) {
+                        innerItem.distance = getDistance(innerItem.x, innerItem.y, item.x, item.y);
+                        closest2 = innerItem;
+                    }
+                }
+
+                //Draw Lines
+                ctx.beginPath();
+                ctx.strokeStyle = rgb(35, 35, 115);
+                ctx.moveTo(closest1.x, closest1.y);
+                ctx.lineTo(item.x, item.y);
+                ctx.stroke();
+                ctx.lineTo(closest2.x, closest2.y);
+                ctx.stroke();
+
+                closest1.distance = 1000.0;
+                closest2.distance = 1000.0;
+            }
+
+            //Draw points and move them around
+            for (let item of points) {
+                ctx.beginPath();
+                var pointGrd = ctx.createRadialGradient(item.x - 1, item.y - 1, 1, item.x, item.y, 10);
+                pointGrd.addColorStop(0, rgb(30, 30, 100));
+                pointGrd.addColorStop(1, rgb(0, 0, 50));
+                ctx.fillStyle = pointGrd;
+                ctx.arc(item.x, item.y, 10, 0, 360, false);
+                ctx.fill();
+                ctx.strokeStyle = rgb(0, 0, 30);
+                ctx.stroke();
+
+                //Cooldown at 0 -> New Targets get set
+                if (item.cooldown <= 0) {
+                    item.cooldown = Math.round(Math.random() * 200 + 100);
+
+                    if (item.targetx <= 20)
+                        item.targetx += Math.random() * 40;
+                    else if (item.targetx >= canvas.width - 80 - item.y)
+                        item.targetx += Math.random() * 40 - 42;
+                    else
+                        item.targetx += Math.random() * 40 - 20;
+                    if (item.targety <= 20)
+                        item.targety += Math.random() * 40;
+                    else if (item.targety >= 500)
+                        item.targety += Math.random() * 40 - 42;
+                    else
+                        item.targety += Math.random() * 40 - 20;
+                }
+
+                //Set Velocity to reach Target
+                item.velocityX = clamp(item.velocityX + (item.targetx - item.x) / 2000.0, -topSpeed, topSpeed);
+                item.velocityY = clamp(item.velocityY + (item.targety - item.y) / 2000.0, -topSpeed, topSpeed);
+
+                //Avoid Mouse Position
+                let toMouseDis = getDistance(item.x, item.y, pos.x, pos.y);
+                if (toMouseDis < 100 && toMouseDis > 0) {
+                    let vX = (((item.x - pos.x) * (1 / toMouseDis)));
+                    let vY = (((item.y - pos.y) * (1 / toMouseDis)));
+                    let fac = 4 - map(toMouseDis, 0, 100, 0, 4);
+                    item.velocityX += vX * fac;
+                    item.velocityY += vY * fac;
+                }
+
+                //Avoid other points
+                for (let innerItem of points) {
+                    let toPointDis = getDistance(item.x, item.y, innerItem.x, innerItem.y);
+                    if (toPointDis < 50 && toPointDis > 0) {
+                        let veX = (((item.x - innerItem.x) * (1 / toPointDis)));
+                        let veY = (((item.y - innerItem.y) * (1 / toPointDis)));
+                        let fact = 0.2 - map(toPointDis, 0, 50, 0, 0.2);
+                        item.velocityX += veX * fact;
+                        item.velocityY += veY * fact;
+                    }
+                }
+
+                //Move the points
+                item.x += item.velocityX;
+                item.y += item.velocityY;
+
+                item.cooldown--;
+
+                /*
+                ctx.fillStyle = rgb(255, 255, 255);
+                ctx.font = "30px Arial";
+                //ctx.fillText(window.pageYOffset.toString(10), 100 , 100 + window.pageYOffset);
+
+                if(true)//item.name == "1")
+                {
+                	ctx.beginPath();
+                	ctx.fillStyle = rgb(255, 0, 0);
+                	ctx.arc(item.targetx, item.targety, 2, 0, 360, false);
+                	ctx.fill();
+                }
+                */
+            }
+        }
+
+        //Focus on the L Category
+        function focusL(obj, from, to) {
+            const InfoHeight = gridL.offsetHeight;
+            gridA.style.visibility = "hidden";
+            gridM.style.visibility = "hidden";
+
+            if (!focused) {
+                if (from >= to) {
+                    obj.style.gridTemplateColumns = "100% 0% 0%";
+                    CatA.style.visibility = "hidden";
+                    CatM.style.visibility = "hidden";
+                    focused = true;
+                    gridL.style.visibility = "visible";
+                    gridL.style.gridTemplateRows = "auto";
+                    unfoldContent(gridL, 0, InfoHeight);
+                    return;
+                } else {
+                    val = Math.sin((from / 200.0) * Math.PI) * Math.sin((from / 200.0) * Math.PI) * 100;
+                    obj.style.gridTemplateColumns = val + "% " +
+                        ((100 - val) / 2) + "% " + ((100 - val) / 2) + "%";
+                    setTimeout(function() {
+                        focusL(obj, from + 1, to);
+                    }, 1);
+                }
+            } else {
+                CatA.style.visibility = "visible";
+                CatM.style.visibility = "visible";
+                if (from >= to) {
+                    obj.style.gridTemplateColumns = "33.3% 33.4% 33.3%";
+                    focused = false;
+                    unfoldContent(gridL, 0, InfoHeight);
+                    return;
+                } else {
+                    val = Math.sin(((from + 60.7) / 200.0) * Math.PI) * Math.sin(((from + 60.7) / 200.0) * Math.PI) * 100;
+                    obj.style.gridTemplateColumns = val + "% " +
+                        ((100 - val) / 2) + "% " + ((100 - val) / 2) + "%";
+                    setTimeout(function() {
+                        focusL(obj, from + 1, to);
+                    }, 1);
+                }
+            }
+        }
+        //Focus on the A Category
+        function focusA(obj, from, to) {
+            const InfoHeight = gridA.offsetHeight;
+            gridL.style.visibility = "hidden";
+            gridM.style.visibility = "hidden";
+
+            if (!focused) {
+                if (from >= to) {
+                    obj.style.gridTemplateColumns = "0% 100% 0%";
+                    CatL.style.visibility = 'hidden';
+                    CatM.style.visibility = 'hidden';
+                    focused = true;
+                    gridA.style.visibility = "visible";
+                    gridA.style.gridTemplateRows = "auto";
+                    unfoldContent(gridA, 0, InfoHeight);
+                    return;
+                } else {
+                    val = Math.sin((from / 200.0) * Math.PI) * Math.sin((from / 200.0) * Math.PI) * 100;
+                    obj.style.gridTemplateColumns = ((100 - val) / 2) + "% " + val + "% " + ((100 - val) / 2) + "%";
+                    setTimeout(function() {
+                        focusA(obj, from + 1, to);
+                    }, 1);
+                }
+            } else {
+                CatL.style.visibility = 'visible';
+                CatM.style.visibility = 'visible';
+                if (from >= to) {
+                    obj.style.gridTemplateColumns = "33.3% 33.4% 33.3%";
+                    focused = false;
+                    unfoldContent(gridA, 0, InfoHeight);
+                    return;
+                } else {
+                    val = Math.sin(((from + 60.7) / 200.0) * Math.PI) * Math.sin(((from + 60.7) / 200.0) * Math.PI) * 100;
+                    obj.style.gridTemplateColumns = ((100 - val) / 2) + "% " + val + "% " + ((100 - val) / 2) + "%";
+                    setTimeout(function() {
+                        focusA(obj, from + 1, to);
+                    }, 1);
+                }
+            }
+        }
+        //Focus on the M Category
+        function focusM(obj, from, to) {
+            const InfoHeight = gridM.offsetHeight;
+            gridL.style.visibility = "hidden";
+            gridA.style.visibility = "hidden";
+
+            if (!focused) {
+                if (from >= to) {
+                    obj.style.gridTemplateColumns = "0% 0% 100%";
+                    CatL.style.visibility = 'hidden';
+                    CatA.style.visibility = 'hidden';
+                    focused = true;
+                    gridM.style.visibility = "visible";
+                    gridM.style.gridTemplateRows = "auto";
+                    unfoldContent(gridM, 0, InfoHeight);
+                    return;
+                } else {
+                    val = Math.sin((from / 200.0) * Math.PI) * Math.sin((from / 200.0) * Math.PI) * 100;
+                }
+            } else {
+                CatL.style.visibility = 'visible';
+                CatA.style.visibility = 'visible';
+                if (from >= to) {
+                    obj.style.gridTemplateColumns = "33.3% 33.4% 33.3%";
+                    focused = false;
+                    unfoldContent(gridM, 0, InfoHeight);
+                    return;
+                } else {
+                    val = Math.sin(((from + 60.7) / 200.0) * Math.PI) * Math.sin(((from + 60.7) / 200.0) * Math.PI) * 100;
+                }
+            }
+
+            obj.style.gridTemplateColumns = ((100 - val) / 2) + "% " + ((100 - val) / 2) + "% " + val + "%";
+            setTimeout(function() {
+                focusM(obj, from + 1, to);
+            }, 1);
+        }
+        //Unfolds te Content
+        function unfoldContent(obj, at, fullHeight) {
+            if (at >= 100) {
+                if (!focused) {
+                    obj.style.visibility = "hidden";
+                    obj.style.gridTemplateRows = "0%";
+                }
+                return;
+            }
+
+            if (focused)
+                val = Math.sin((at / 200.0) * Math.PI) * Math.sin((at / 200.0) * Math.PI) * 100;
+            else
+                val = Math.sin(((at + 100) / 200.0) * Math.PI) * Math.sin(((at + 100) / 200.0) * Math.PI) * 100;
+
+            TBG.style.height = (val / 100.0) * fullHeight + "px";
+
+            onScroll();
+
+            setTimeout(function() {
+                unfoldContent(obj, at + 1, fullHeight);
+            }, 1);
+        }
+
+
+        /*
+         *
+         *	EventListeners
+         *
+         */
+        function onScroll() {
+            progressBar.style.transform = `scale(1,${window.pageYOffset / (document.body.scrollHeight - window.innerHeight)})`;
+        }
+
+        function onScrollBarClick(event) {
+            let scrlTo = ((event.pageY - window.pageYOffset) / progressBarContainer.offsetHeight) * (document.body.scrollHeight - progressBarContainer.offsetHeight);
+
+            window.scroll({
+                top: scrlTo,
+                left: 0,
+                behavior: "smooth"
+            });
+        }
+
+        function onScrollBarMouseDown(event) {
+            barClicked = true;
+        }
+
+        function onScrollBarMouseUp(event) {
+            barClicked = false;
+        }
+
+        function onMouseMove(event) {
+            event = event || window.event;
+
+            mousePos = {
+                x: event.pageX,
+                y: event.pageY - window.pageYOffset
+            };
+
+            if (barClicked)
+                window.scrollTo(0, ((event.pageY - window.pageYOffset) / progressBarContainer.offsetHeight) * (document.body.scrollHeight - progressBarContainer.offsetHeight));
+        }
+
+        function onCatLClick(event) {
+            focusL(CatGrid, 39.3, 100);
+        }
+
+        function onCatAClick(event) {
+            focusA(CatGrid, 39.3, 100);
+        }
+
+        function onCatMClick(event) {
+            focusM(CatGrid, 39.3, 100);
+        }
+
+        function onEasterEgg(event) {
+            ClickCounter++;
+            if (ClickCounter >= 20) {
+                EE.src = "Cheeky Bloke.png";
+            }
+        }
+
+
+        /*
+         *
+         *	Util
+         *
+         */
+
+        //Remaps a value from a given Field to a new Field
+        function map(val, srcFloor, srcCeil, destFloor, destCeil) {
+            return destFloor + ((destCeil - destFloor) * ((val - srcFloor) / (srcCeil - srcFloor)));
+        }
+
+        //Limits a value to the floor minimum and the ceil maximum
+        function clamp(val, floor, ceil) {
+            if (val < floor)
+                return floor;
+            else if (val > ceil)
+                return ceil;
+            else
+                return val;
+        }
+
+        ///Rescale Canvas to the destined width and heigt with a offset
+        function rescale(canv, wid, hei, o_wid, o_hei) {
+            if (canv.width != wid + offsetWidth) {
+                canv.width = wid + o_wid;
+                canv.height = hei + o_hei;
+            }
+        }
+
+        //Create a HTML Hex Color from rgb values
+        function rgb(r, g, b) {
+            return "#" + clamp(r, 0, 255).toString(16).padStart(2, '0') + clamp(g, 0, 255).toString(16).padStart(2, '0') + clamp(b, 0, 255).toString(16).padStart(2, '0');
+        }
+
+        //Create a HTML Hex Color from rgba values
+        function rgba(r, g, b, a) {
+            return rgb(r, g, b) + clamp(a, 0, 255).toString(16).padStart(2, '0');
+        }
+
+        //Calculate the Distance between two 2D-Points
+        function getDistance(x1, y1, x2, y2) {
+            return Math.sqrt(((x1 - x2) * (x1 - x2)) +
+                ((y1 - y2) * (y1 - y2)));
+        }
+    </script>
+</body>
+
+</html>

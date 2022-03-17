@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Data</title>
+</head>
+
+<body>
+    <form action="inputdata" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset id="doc">
+            <input placeholder="Choose file" type="file" name="doc1" id="doc1">
+        </fieldset>
+        <input type="text" name="fx0" id="dx" hidden>
+        <button type="button" onclick="addinfo()" class="btn btn-primary">Add more</button>
+        <br>
+        <br>
+
+
+
+
+
+
+        <button type="submit">upload file</button>
+
+
+    </form>
+
+
+
+    <script>
+        var infonos = 1;
+
+        function addinfo() {
+
+            console.log(infonos);
+            if (infonos > 1) {
+                kk = document.getElementById(`doc${infonos}`).value
+
+                if (kk == "") {
+
+                } else {
+                    infonos = infonos + 1;
+
+                    var input = document.createElement("input");
+                    var t = document.createAttribute("type");
+                    t.value = "file"
+                    input.setAttributeNode(t);
+                    var ii = document.createAttribute("id");
+                    ii.value = `doc${infonos}`
+                    input.setAttributeNode(ii);
+                    var iii = document.createAttribute("name");
+                    iii.value = `doc${infonos}`
+                    input.setAttributeNode(iii);
+                    document.getElementById("doc").appendChild(input);
+
+
+
+                }
+            } else if (infonos == 1) {
+                console.log("dd");
+
+                if (document.getElementById("doc1").value != "") {
+
+                    infonos = infonos + 1;
+
+                    var input = document.createElement("input");
+
+                    var t = document.createAttribute("type");
+                    t.value = "file"
+                    input.setAttributeNode(t);
+                    var ii = document.createAttribute("id");
+                    ii.value = `doc${infonos}`
+                    input.setAttributeNode(ii);
+                    var iii = document.createAttribute("name");
+                    iii.value = `doc${infonos}`
+                    input.setAttributeNode(iii);
+                    document.getElementById("doc").appendChild(input);
+
+                } else {
+
+                }
+            }
+
+        }
+    </script>
+
+</body>
+
+</html>
