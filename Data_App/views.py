@@ -51,21 +51,21 @@ def home(request):
 
     
 
-    if request.method == 'POST':
-        g =1
-        for f in request.FILES:
-            s = "doc" + str(g)
-            g += 1
-            file = request.FILES[s]
-            if file == None:
-                break
-            fs = FileSystemStorage()
-            n = fs.save(file.name, file)
-            url = fs.url(n)
-        return redirect('result')
+    # if request.method == 'POST':
+    #     g =1
+    #     for f in request.FILES:
+    #         s = "doc" + str(g)
+    #         g += 1
+    #         file = request.FILES[s]
+    #         if file == None:
+    #             break
+    #         fs = FileSystemStorage()
+    #         n = fs.save(file.name, file)
+    #         url = fs.url(n)
+    #     return redirect('result')
     
+    return render(request, 'adddata.html')
     return render(request, 'result.html')
-    # return render(request, 'adddata.html')
 
 
 

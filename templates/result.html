@@ -5,10 +5,52 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Document</title>
     <style>
         body {
-            background-color: rgb(226, 252, 255);
+            font-family: "Open Sans", Helvetica, Arial, sans-serif;
+            font-weight: 300;
+            font-size: 12px;
+            line-height: 30px;
+            color: #777;
+            background-image: url(https://wallpaperaccess.com/full/281739.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        .button-two {
+            border-radius: 4px;
+            background-color: #d35400;
+            border: none;
+            padding: 20px;
+            width: 200px;
+            transition: all 0.5s;
+        }
+        
+        .button-two span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+        
+        .button-two span:after {
+            content: '»';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -20px;
+            transition: 0.5s;
+        }
+        
+        .button-two:hover span {
+            padding-right: 25px;
+        }
+        
+        .button-two:hover span:after {
+            opacity: 1;
+            right: 0;
         }
         
         * {
@@ -21,24 +63,27 @@
         
         .img-zoom-container {
             position: relative;
-            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
         }
         
         .img-zoom-lens {
             position: absolute;
-            border: 1px solid #d4d4d4;
+            /* border: 1px solid #d4d4d4; */
             opacity: 0.3;
             border-radius: 10px;
             /*set the size of the lens:*/
-            width: 150px;
-            height: 150px;
+            width: 200px;
+            height: 200px;
+        }
+        
+        .head {
+            margin: auto;
         }
         
         .img-zoom-result {
             border: 1px solid #d4d4d4;
             box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
             /*set the size of the result div:*/
-            width: 400px;
+            width: 500px;
             height: 400px;
             border-radius: 10px;
         }
@@ -52,6 +97,47 @@
         .outer {
             margin: 20px;
             margin-bottom: 50px;
+        }
+        /*Button Three*/
+        
+        .button-three {
+            position: relative;
+            background-color: #f39c12;
+            border: none;
+            padding: 20px;
+            width: 200px;
+            text-align: center;
+            -webkit-transition-duration: 0.4s;
+            /* Safari */
+            transition-duration: 0.4s;
+            text-decoration: none;
+            overflow: hidden;
+        }
+        
+        .button-three:hover {
+            background: #fff;
+            box-shadow: 0px 2px 10px 5px #97B1BF;
+            color: #000;
+        }
+        
+        .button-three:after {
+            content: "";
+            background: #f1c40f;
+            display: block;
+            position: absolute;
+            padding-top: 300%;
+            padding-left: 350%;
+            margin-left: -20px !important;
+            margin-top: -120%;
+            opacity: 0;
+            transition: all 0.8s
+        }
+        
+        .button-three:active:after {
+            padding: 0;
+            margin: 0;
+            opacity: 1;
+            transition: 0s
         }
     </style>
     <script>
@@ -128,26 +214,37 @@
 </head>
 
 <body>
+    <div class="head">
+
+        <h1 style="color: rgb(255, 255, 255); font-size: 60px;text-align: center;">Xray-Burst-Analyser-XBA</h1>
+        <h1 style="color: rgb(255, 255, 255); font-size: 50px;text-align: center;">Result</h1>
+        <hr>
+    </div>
 
     <div class="outer">
 
 
         <div style="display: flex;" class="img-zoom-container flx">
-            <img id="myimage1" src="/media/ch2_xsm_20200614_v1_level2.jpg" class="fblogo" width="600" height="550">
-            <div width="40" height="40" style="overflow: hidden;" id="myresult1" class="img-zoom-result fblogo"></div>
+            <img id="myimage1" src="/media/ch2_xsm_20200614_v1_level2.jpg" class="fblogo" width="650" height="500">
+            <div style="overflow: hidden;" id="myresult1" class="img-zoom-result fblogo"></div>
         </div>
         <script>
             // Initiate zoom effect:
             imageZoom("myimage1", "myresult1");
         </script>
+        <div class="sub-main">
+            <button style="font-size: 16px;" class="button-two"><span>Download csv file</span></button>
+        </div>
+        <hr>
+
     </div>
 
 
 
     <div class="outer">
         <div style="display: flex;" class="img-zoom-container flx">
-            <img id="myimage2" src="/media/ch2_xsm_20200614_v1_level2.jpg" class="fblogo" width="600" height="550">
-            <div width="40" height="40" style="overflow: hidden;" id="myresult2" class="img-zoom-result fblogo"></div>
+            <img id="myimage2" src="/media/ch2_xsm_20200614_v1_level2.jpg" class="fblogo" width="650" height="500">
+            <div width="4000" height="40" style="overflow: hidden;" id="myresult2" class="img-zoom-result fblogo"></div>
         </div>
         <script>
             // Initiate zoom effect:
