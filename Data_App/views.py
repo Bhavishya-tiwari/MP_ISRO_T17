@@ -64,7 +64,8 @@ def home(request):
             url = fs.url(n)
         return redirect('result')
     
-    return render(request, 'adddata.html')
+    return render(request, 'result.html')
+    # return render(request, 'adddata.html')
 
 
 
@@ -378,7 +379,7 @@ def i(request):
         print('Features extracted and saved ...')
 
         #Plotting the results
-        plt.figure()
+        plt.figure(dpi=300)
         plt.scatter(time1, data, s = 1)
         plt.plot(timenew, datanew, c= 'r')
         plt.scatter(timenew[idxCandidate], datanew[idxCandidate], c='g', marker='x')
