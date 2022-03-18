@@ -1,8 +1,12 @@
+from fileinput import filename
+from multiprocessing.dummy import Array
+from turtle import towards
 from django.shortcuts import render, HttpResponse, redirect
 import os
 from django.core.files.storage import FileSystemStorage
 import itertools
 import matplotlib.gridspec as gridspec
+from parso import parse
 from sklearn.cluster import *
 from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score
 from astropy.io import fits
@@ -22,17 +26,20 @@ import glob
 import warnings
 import pyfiglet
 import pickle
+import csv
 
-
+from django.http import StreamingHttpResponse
 
 
 
 # /////////////////////////////////////////////////////////////////////////////
 
 def home(request):
+
     # dir = 'Data_Handling/csv_file'
     # for f in os.listdir(dir):
     #     os.remove(os.path.join(dir, f))
+    return render(request, 'result.html')
     return render(request, 'home.html')
 
 def adddata(request):
@@ -66,6 +73,7 @@ def i(request):
     print('XSMWAS: Light Curve Waveform Analysis Software for Chandrayaan-II Solar X-ray Monitor')
     print('                                XSMWAS Version: 1.0')
     print('--------------------------------------------------------------------------------------\n\n')
+    e=[]
 
     #Recording time of execution
     startCode = time.time()
@@ -223,6 +231,7 @@ def i(request):
             dataTempShort = datanew[idxSearch[i]:idxSearch[i+1]]
             argMin = idxSearch[i]+np.where(dataTempShort == np.amin(dataTempShort))[0][0]    
             idxMinima.append(argMin)
+        e.append(filename)
                 
         #Arrays for saving extracted features
         peakTimeArr = []
@@ -322,6 +331,9 @@ def i(request):
     #             plt.scatter(peakTime, peakFlux, c= 'r')
 
 
+
+
+# *************************************************************************************************
         toWrite = pd.concat([pd.Series(fileNameArr, name='File Name'),
                             pd.Series(peakTimeArr,name='Peak Time (s)'),
                             pd.Series(peakFluxArr,name='Peak Flux (counts/s)'), 
@@ -333,7 +345,13 @@ def i(request):
                             pd.Series(decayTimeArr,name='Decay Time (s)'), 
                             pd.Series(durationArr,name='Duration (s)'),
                             pd.Series(categoryArr, name = 'Category of Flare')], axis=1)
-        toWrite.to_csv(os.path.join(csv_path + filename + '.csv'), index = False)
+        toWrite.to_csv (os.path.join(csv_path + filename + '.csv'), index = False)
+# *************************************************************************************************
+
+
+
+
+        # print(riseTimeArr)
         print('Features extracted and saved ...')
 
         #Plotting the results
@@ -370,7 +388,7 @@ def i(request):
     # imgSave = input('Save images? (y/n)\n')
     # imgView = input('Interactively view images? (y/n)\n')
 
-    saveImgFlag = 0
+    saveImgFlag = 1
     # if imgSave == 'y':
     #     saveImgFlag = 1
 
@@ -382,8 +400,8 @@ def i(request):
         start_time = time.time()
         count += 1
         print(f'\nExtracting Features from file: {count}')
-        fig_path = os.path.join(path + r'/Data_App/fig_files/')
-        csv_path = os.path.join(path + r'/Data_App/csv_files/')
+        fig_path = os.path.join(path + r'/Data_App/lc_files/')
+        csv_path = os.path.join(path + r'/Data_App/lc_files/')
         pkl_path = os.path.join(path + r'/Data_App/xsm_model.pkl')
         final_data = featureExtractor(file, fig_path, csv_path, pkl_path)
         print(f'Total Time taken: {time.time() - start_time} seconds \n')
@@ -391,7 +409,7 @@ def i(request):
     print(f'\nDone! Finished in {time.time() - startCode} seconds\n')
     print('--------------------------------------------------------------------------------------')
 
-    return HttpResponse("fv")
+    return render(request, 'result.html',{"name":e})
 
 def run():
     return HttpResponse("Gg")
