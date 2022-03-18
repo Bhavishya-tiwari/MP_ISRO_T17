@@ -27,48 +27,15 @@ import warnings
 import pyfiglet
 import pickle
 import csv
-
 from django.http import StreamingHttpResponse
 
-
-
-# /////////////////////////////////////////////////////////////////////////////
-
-# def home(request):
-
-#     # dir = 'Data_Handling/csv_file'
-#     # for f in os.listdir(dir):
-#     #     os.remove(os.path.join(dir, f))
-#     return render(request, 'result.html')
-#     return render(request, 'home.html')
-
 def home(request):
-    # path = os.getcwd()
-    # final_path = os.path.join(path + '/Data_App/lc_files')
-    # files = glob.glob(final_path)
-    # for f in os.listdir(files[0]):
-    #     os.remove(os.path.join(files[0],f))
-
-    
-
-    # if request.method == 'POST':
-    #     g =1
-    #     for f in request.FILES:
-    #         s = "doc" + str(g)
-    #         g += 1
-    #         file = request.FILES[s]
-    #         if file == None:
-    #             break
-    #         fs = FileSystemStorage()
-    #         n = fs.save(file.name, file)
-    #         url = fs.url(n)
-    #     return redirect('result')
-    
+    path = os.getcwd()
+    final_path = os.path.join(path + '/Data_App/lc_files')
+    files = glob.glob(final_path)
+    for f in os.listdir(files[0]):
+        os.remove(os.path.join(files[0],f))
     return render(request, 'adddata.html')
-    return render(request, 'result.html')
-
-
-
 
 
 def uploadfiles(request):
@@ -86,11 +53,8 @@ def uploadfiles(request):
         return redirect('result')
     return HttpResponse("Bad Gateway")
 
-
-
-
-def i(request):
    
+def result(request):
     print('--------------------------------------------------------------------------------------')
     art = pyfiglet.figlet_format('       XSMWAS', font='epic')
     print(art)
@@ -143,10 +107,7 @@ def i(request):
             print('Please save with an appropriate extension.')
             return None
 
-        #     #Noisy data figure
-        #     plt.figure()
-        #     plt.scatter(time1, data, s=1)
-        #     plt.title(filename)
+
 
         #Smoothening individual streches of continuous data
         idx  = [i+1 for i,val in enumerate(dt) if val>100]
@@ -207,9 +168,7 @@ def i(request):
                 dataRegress = dataRegress
 
 
-        #         plt.figure()
-        #         plt.scatter(timeTempNew, dataSmoothTemp)
-        #         plt.plot(timeRegress, dataRegress, c = 'r')
+    
 
             #Appending the data to the complete stretch
             dataSmooth.extend(dataRegress)
@@ -219,10 +178,7 @@ def i(request):
         timeSmooth = np.array(timeSmooth) #Saving as numpy array for convenience
         sigma = np.std(err) #Finding the deviation of noisefloor
 
-        #Smoothened data figure
-    #     plt.figure()
-    #     plt.scatter(timeSmooth, dataSmooth, s=1)
-    #     plt.title(filename)
+
 
         #upsampling for ease of locating local maxima - candidate flare events
         f1 = interpolate.interp1d(timeSmooth, dataSmooth, kind = 'cubic') #
@@ -280,8 +236,7 @@ def i(request):
             timefit = timenew[idxMinima[i]:idxMinima[i+1]]
             datafit = datanew[idxMinima[i]:idxMinima[i+1]]
             
-    #         plt.figure()
-    #         plt.plot(timefit, datafit)
+
             
             #Heuristic way of guessing parameters
             aG = 1
@@ -343,21 +298,11 @@ def i(request):
                     categoryArr.append(pickle_model.predict(final_features.reshape(1,-1)))
                     
 
-                #figures if needed can be generated and saved accordingly
-
-    #             plt.figure()
-    #             plt.plot(timefit, datafit)
-    #             plt.plot(timeAx, fit)
-    #             plt.plot(timeAx, bkg*np.ones(len(timeAx)))
-    #             plt.scatter(timeAx[idxSS], fit[idxSS], c = 'g', marker = 'x')
-    #             plt.xlabel('Time (s)')
-    #             plt.ylabel('Flux (counts/s)')
-    #             plt.scatter(peakTime, peakFlux, c= 'r')
 
 
 
 
-# *************************************************************************************************
+
         toWrite = pd.concat([pd.Series(fileNameArr, name='File Name'),
                             pd.Series(peakTimeArr,name='Peak Time (s)'),
                             pd.Series(peakFluxArr,name='Peak Flux (counts/s)'), 
@@ -370,7 +315,6 @@ def i(request):
                             pd.Series(durationArr,name='Duration (s)'),
                             pd.Series(categoryArr, name = 'Category of Flare')], axis=1)
         toWrite.to_csv (os.path.join(csv_path + filename + '.csv'), index = False)
-# *************************************************************************************************
 
 
 
@@ -409,16 +353,13 @@ def i(request):
     if not os.path.isdir('csv_files'):
         os.mkdir('csv_files')
     
-    # imgSave = input('Save images? (y/n)\n')
-    # imgView = input('Interactively view images? (y/n)\n')
+
 
     saveImgFlag = 1
-    # if imgSave == 'y':
-    #     saveImgFlag = 1
+
 
     viewImgFlag = 0
-    # if imgView == 'y':
-    #     viewImgFlag = 1 
+
         
     for file in names:
         start_time = time.time()
@@ -435,8 +376,13 @@ def i(request):
 
     return render(request, 'result.html',{"name":e})
 
-def run():
-    return HttpResponse("Gg")
+
+
+
+
+
+
+
 
     
     
