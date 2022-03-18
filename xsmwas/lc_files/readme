@@ -1,3 +1,5 @@
 The light curve files go in this folder. You can directly unzip them to this location after downloading the zip files from pradam site. 
 Kindly ensure that you add only the light curve files in this location. The tool doesn't require any auxiliary files for identifying features, for instance
 a .gti file for extracting good time intervals. 
+
+PLEASE DELETE THIS FILE BEFORE RUNNING THE SCRIPTS
