@@ -34,15 +34,23 @@ from django.http import StreamingHttpResponse
 
 # /////////////////////////////////////////////////////////////////////////////
 
+# def home(request):
+
+#     # dir = 'Data_Handling/csv_file'
+#     # for f in os.listdir(dir):
+#     #     os.remove(os.path.join(dir, f))
+#     return render(request, 'result.html')
+#     return render(request, 'home.html')
+
 def home(request):
+    # path = os.getcwd()
+    # final_path = os.path.join(path + '/Data_App/lc_files')
+    # files = glob.glob(final_path)
+    # for f in os.listdir(files[0]):
+    #     os.remove(os.path.join(files[0],f))
 
-    # dir = 'Data_Handling/csv_file'
-    # for f in os.listdir(dir):
-    #     os.remove(os.path.join(dir, f))
-    return render(request, 'result.html')
-    return render(request, 'home.html')
+    
 
-def adddata(request):
     if request.method == 'POST':
         g =1
         for f in request.FILES:
@@ -54,6 +62,7 @@ def adddata(request):
             fs = FileSystemStorage()
             n = fs.save(file.name, file)
             url = fs.url(n)
+        return redirect('result')
     
     return render(request, 'adddata.html')
 
@@ -61,6 +70,20 @@ def adddata(request):
 
 
 
+def uploadfiles(request):
+    if request.method == 'POST':
+        g =1
+        for f in request.FILES:
+            s = "doc" + str(g)
+            g += 1
+            file = request.FILES[s]
+            if file == None:
+                break
+            fs = FileSystemStorage()
+            n = fs.save(file.name, file)
+            url = fs.url(n)
+        return redirect('result')
+    return HttpResponse("Bad Gateway")
 
 
 

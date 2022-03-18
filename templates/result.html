@@ -15,24 +15,15 @@
     <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
 
     <table id="1"> </table>
-    {{name}}
+    {% for n in name %}
+    <img src="/media/{{n}}.jpg" alt="">
+    <br>
 
-    <button onclick="createTable()">Create</button>
+    
+    
+    {% endfor %}
 
-    <script>
-        function createTable() {
-            var array = [[1,2,3],[4,5,6],[7,8,9]];
-            var content = "";
-            array.forEach(function(row) {
-                content += "<tr>";
-                row.forEach(function(cell) {
-                    content += "<td>" + cell + "</td>" ;
-                });
-                content += "</tr>";
-            });
-            document.getElementById("1").innerHTML = content;
-        }
-    </script>
+
 </body>
 
 </html>

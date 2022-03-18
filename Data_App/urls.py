@@ -22,8 +22,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
         path('', views.home, name='home'), 
-        path('inputdata', views.adddata, name='adddata'), 
-        path('j', views.i, name='i'), 
+        path('uploadfiles', views.uploadfiles, name='uploadfiles'), 
+        path('result', views.i, name='result'), 
 
 ]
 # if settings.DEBUG:
