@@ -1,1 +1,6 @@
-
+1. Download this folder. That shall function as the standalone application. 
+2. The folder contains 'final_data.csv' which shall be used to initialize the classifier. It also contains 'lc_files' folder where all the light curve files go.
+3. Run xsmmodgen.py to generate the mlmodel to be used for classification. This is a one time process. Running the script would generate a .pkl file.
+4. Ensure all the lightcurve files you want analyzed are present in the 'lc_files' folder. 
+5. Run xsmwas.py, specify the preferences for saving the plots and viewing them interactively. Close one plot, if you want to move ahead to analyzing the other.
+6. Your lightcurve files have been analyzed!
